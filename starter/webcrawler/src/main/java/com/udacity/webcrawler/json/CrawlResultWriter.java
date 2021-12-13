@@ -1,6 +1,12 @@
 package com.udacity.webcrawler.json;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -8,7 +14,7 @@ import java.util.Objects;
  * Utility class to write a {@link CrawlResult} to file.
  */
 public final class CrawlResultWriter {
-  private final CrawlResult result;
+  public static CrawlResult result;
 
   /**
    * Creates a new {@link CrawlResultWriter} that will write the given {@link CrawlResult}.
@@ -29,6 +35,12 @@ public final class CrawlResultWriter {
     // This is here to get rid of the unused variable warning.
     Objects.requireNonNull(path);
     // TODO: Fill in this method.
+    try {
+      Writer writer = Files.newBufferedWriter(path);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -36,9 +48,19 @@ public final class CrawlResultWriter {
    *
    * @param writer the destination where the crawl result data should be written.
    */
-  public void write(Writer writer) {
+  @JsonDeserialize(builder = CrawlerConfiguration.Builder.class)
+  public static void write(Writer writer) throws IOException {
     // This is here to get rid of the unused variable warning.
     Objects.requireNonNull(writer);
     // TODO: Fill in this method.
+
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+    try {
+      mapper.writeValue(writer, result);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

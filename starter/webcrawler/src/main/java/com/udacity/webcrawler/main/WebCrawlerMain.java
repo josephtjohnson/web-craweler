@@ -38,6 +38,16 @@ public final class WebCrawlerMain {
     CrawlResultWriter resultWriter = new CrawlResultWriter(result);
     // TODO: Write the crawl results to a JSON file (or System.out if the file name is empty)
     // TODO: Write the profile data to a text file (or System.out if the file name is empty)
+
+    if (config.getResultPath().isEmpty()) {
+      System.out.println("Result -> ");
+      resultWriter.write(new OutputStreamWriter(System.out));
+    }
+    else {
+      System.out.println("Result -> " + config.getResultPath());
+      resultWriter.write(Path.of(config.getResultPath()));
+    }
+
   }
 
   public static void main(String[] args) throws Exception {
