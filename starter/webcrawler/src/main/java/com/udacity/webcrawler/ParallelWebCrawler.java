@@ -5,14 +5,12 @@ import com.udacity.webcrawler.parser.PageParser;
 import com.udacity.webcrawler.parser.PageParserFactory;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * A concrete implementation of {@link WebCrawler} that runs multiple threads on a
@@ -99,15 +97,15 @@ final class ParallelWebCrawler implements WebCrawler {
     @Override
     protected Boolean compute() {
       if (maxDepth == 0 || clock.instant().isAfter(deadline)) {
-        return false;
+        return null;
       }
       for (Pattern pattern : ignoredUrls) {
         if (pattern.matcher(url).matches()) {
-          return false;
+          return null;
         }
       }
       if (visitedUrls.contains(url)) {
-        return false;
+        return null;
       }
       visitedUrls.add(url);
       PageParser.Result result = parserFactory.get(url).parse();
@@ -123,7 +121,7 @@ final class ParallelWebCrawler implements WebCrawler {
         subtasks.add(new internalCrawler(link, deadline, maxDepth - 1, counts, visitedUrls, clock, parserFactory, ignoredUrls));
       }
       invokeAll(subtasks);
-      return true;
+      return null;
     }
   }
 
