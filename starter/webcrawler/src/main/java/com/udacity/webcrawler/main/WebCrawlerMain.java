@@ -40,12 +40,22 @@ public final class WebCrawlerMain {
     // TODO: Write the profile data to a text file (or System.out if the file name is empty)
 
     if (config.getResultPath().isEmpty()) {
-      System.out.println("Result -> ");
+      System.out.println("\nResult -> ");
       resultWriter.write(new OutputStreamWriter(System.out));
     }
     else {
-      System.out.println("Result -> " + config.getResultPath());
+      System.out.println("\nResult path empty\n");
       resultWriter.write(Path.of(config.getResultPath()));
+    }
+
+    if (config.getProfileOutputPath().isEmpty()) {
+      System.out.println("\nOutput Path -> ");
+      resultWriter.write(new OutputStreamWriter(System.out));
+    }
+    else {
+      System.out.println();
+      System.out.println("\nOutput path empty\n");
+      resultWriter.write(Path.of(config.getProfileOutputPath()));
     }
 
   }
@@ -55,7 +65,6 @@ public final class WebCrawlerMain {
       System.out.println("Usage: WebCrawlerMain [starting-url]");
       return;
     }
-
     CrawlerConfiguration config = new ConfigurationLoader(Path.of(args[0])).load();
     new WebCrawlerMain(config).run();
   }
