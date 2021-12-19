@@ -38,20 +38,18 @@ final class ProfilingMethodInterceptor implements InvocationHandler {
     //       ProfilingState methods.
 
     boolean isProfiled = isMethodProfiled(method);
+    Instant start = clock.instant();
 
-    if (isProfiled) {
-      Instant start = clock.instant();
-      try {
-        return method.invoke(target, args);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
-      } catch (InvocationTargetException e) {
-        throw e.getTargetException();
-      } finally {
-        if (isProfiled) {
-          Duration duration = Duration.between(start, clock.instant());
-          profilingState.record(target.getClass(), method, duration);
-        }
+    try {
+      method.invoke(target, args);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    } catch (InvocationTargetException e) {
+      throw e.getTargetException();
+    } finally {
+      if (isProfiled) {
+        Duration duration = Duration.between(start, clock.instant());
+        profilingState.record(target.getClass(), method, duration);
       }
     }
     return method.invoke(target, args);
