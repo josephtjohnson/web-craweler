@@ -10,6 +10,11 @@ Q1. Run the web crawler using the configurations located at src/main/config/writ
     the ParallelWebCrawler.
 
     Why did the parser take more time when run with ParallelWebCrawler?
+    
+    \\ANSWER\\
+    The number of urls accessed by the parallel web crawler was # and the number of urls accessed by the sequential web crawler
+    was #.  The parallel web crawler brought in many more urls to parse. The crawling will stop at the timeout, but the parsing
+    will continue until finished.
 
 
 Q2. Your manager ran your crawler on her old personal computer, using the configurations from Q1, and she notices that
@@ -17,9 +22,19 @@ Q2. Your manager ran your crawler on her old personal computer, using the config
 
     (a) Suggest one reason why the sequential web crawler was able to read more web pages than the parallel crawler.
         (Hint: Try setting "parallelism" to 1 in the JSON configs to simulate your manager's computer.)
+        
+        //ANSWER
+        The parallel web crawler must divide up the work, complete the processing, and rejoin the threads, whereas the sequential
+        will run everything through one thread. If the older computer is a single-core processor there may be many threads started
+        at once (concurrency), but each additional thread requires the one before it to complete its task. Once all tasks are
+        completed then the threads are join. With a single threaded, sequential crawler the concurrency time is not lost.
 
     (b) Suggest one scenario in which the parallel web crawler will almost certainly perform better than the sequential
         crawler. Why will it perform better?
+        
+        //ANSWER
+        Multi-core processing capability. With multi-core processing there can be multiple threads started and processing
+        at once.
 
 
 Q3. Analyze your method profiler through the lens of Aspect Oriented Programming, by answering the following questions:
