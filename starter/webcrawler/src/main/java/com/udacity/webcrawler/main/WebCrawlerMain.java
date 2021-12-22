@@ -37,27 +37,31 @@ public final class WebCrawlerMain {
     CrawlResult result = crawler.crawl(config.getStartPages());
     CrawlResultWriter resultWriter = new CrawlResultWriter(result);
     // TODO: Write the crawl results to a JSON file (or System.out if the file name is empty)
-    // TODO: Write the profile data to a text file (or System.out if the file name is empty)
-
+    
     if (config.getResultPath().isEmpty()) {
-      System.out.println("\nResult -> ");
-      resultWriter.write(new OutputStreamWriter(System.out));
-    }
-    else {
-      System.out.println("\nResult path empty\n");
-      resultWriter.write(Path.of(config.getResultPath()));
-    }
-
-    if (config.getProfileOutputPath().isEmpty()) {
-      System.out.println("\nOutput Path -> ");
+      System.out.println();
+      System.out.println("\nResult Path Not Found\n");
       resultWriter.write(new OutputStreamWriter(System.out));
     }
     else {
       System.out.println();
-      System.out.println("\nOutput path empty\n");
-      resultWriter.write(Path.of(config.getProfileOutputPath()));
+      Path resultPath = config.getResultPath()
+      System.out.println("\nResults Written to " + resultPath);
+      resultWriter.write(Path.of(resultPath));
     }
+    // TODO: Write the profile data to a text file (or System.out if the file name is empty)
 
+    if (config.getProfileOutputPath().isEmpty()) {
+      System.out.println();
+      System.out.println("\nOutput Path Not Found\n");
+      profiler.writeData(new OutputStreamWriter(System.out));
+    }
+    else {
+      System.out.println();
+      Path outputPath = config.getProfileOutputPath()
+      System.out.println("\nProfiler Information Written to " + outputPath);
+      profiler.writeData(Path.of(outputPath));
+    }
   }
 
   public static void main(String[] args) throws Exception {
