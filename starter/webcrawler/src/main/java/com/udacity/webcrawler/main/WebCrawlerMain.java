@@ -9,11 +9,8 @@ import com.udacity.webcrawler.json.CrawlResultWriter;
 import com.udacity.webcrawler.json.CrawlerConfiguration;
 import com.udacity.webcrawler.profiler.Profiler;
 import com.udacity.webcrawler.profiler.ProfilerModule;
-
 import javax.inject.Inject;
-import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -40,27 +37,27 @@ public final class WebCrawlerMain {
     
     if (config.getResultPath().isEmpty()) {
       System.out.println();
-      System.out.println("\nResult Path Not Found\n");
+      System.out.println("Result Path Not Found");
       resultWriter.write(new OutputStreamWriter(System.out));
     }
     else {
       System.out.println();
-      Path resultPath = config.getResultPath()
-      System.out.println("\nResults Written to " + resultPath);
-      resultWriter.write(Path.of(resultPath));
+      Path resultPath = Path.of(config.getResultPath());
+      System.out.println("Results written to " + resultPath);
+      resultWriter.write(resultPath);
     }
     // TODO: Write the profile data to a text file (or System.out if the file name is empty)
 
     if (config.getProfileOutputPath().isEmpty()) {
       System.out.println();
-      System.out.println("\nOutput Path Not Found\n");
+      System.out.println("Output path not found");
       profiler.writeData(new OutputStreamWriter(System.out));
     }
     else {
       System.out.println();
-      Path outputPath = config.getProfileOutputPath()
-      System.out.println("\nProfiler Information Written to " + outputPath);
-      profiler.writeData(Path.of(outputPath));
+      Path outputPath = Path.of(config.getProfileOutputPath());
+      System.out.println("Profiler information written to " + outputPath);
+      profiler.writeData(outputPath);
     }
   }
 

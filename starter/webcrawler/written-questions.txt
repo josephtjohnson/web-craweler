@@ -52,7 +52,7 @@ Q3. Analyze your method profiler through the lens of Aspect Oriented Programming
 Q4. Identify three (3) different design patterns used in this project, and explain which interfaces, classes, and/or
     libraries use or implement those design patterns.
     
-    Factory - PagePareserFactory
+    Factory - PageParserFactory
     Proxy -  ProfilerImpl
     Builder - CrawlResult
     
@@ -60,6 +60,10 @@ Q4. Identify three (3) different design patterns used in this project, and expla
     For each pattern, name one thing about the pattern that you LIKED, and one thing you DISLIKED. If you did not like
     anything, you can name two things you disliked.
     
-    Factory - decoupling object creation, endless customization
-    Proxy - 
+    Factory - LIKE: decoupling object creation, endless customization
+              DISLIKE: need a whiteboard to trace the path
+    Proxy   - LIKE: security, verification before initialization
+              DISLIKE: difficult to implement
+    Builder - LIKE: flexibility for building immutable objects, more control than abstract factory
+              DISLIKE: requires much code
 
