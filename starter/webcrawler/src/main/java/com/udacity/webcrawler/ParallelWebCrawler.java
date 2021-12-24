@@ -10,6 +10,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
 /**
@@ -104,24 +106,35 @@ final class ParallelWebCrawler implements WebCrawler {
           return null;
         }
       }
-      if (visitedUrls.contains(url)) {
+      ReentrantLock lock = new ReentrantLock();
+      try {
+        lock.lock();
+        if (!visitedUrls.add(url)) {
+          return false;
+        }
+        visitedUrls.add(url);
+        PageParser.Result result = parserFactory.get(url).parse();
+        for (Map.Entry<String, Integer> e : result.getWordCounts().entrySet()) {
+          if (counts.containsKey(e.getKey())) {
+            counts.put(e.getKey(), e.getValue() + counts.get(e.getKey()));
+          } else {
+            counts.put(e.getKey(), e.getValue());
+          }
+        }
+        List<internalCrawler> subtasks = new ArrayList<>();
+        for (String link : result.getLinks()) {
+          subtasks.add(new internalCrawler(link, deadline, maxDepth - 1, counts, visitedUrls, clock, parserFactory, ignoredUrls));
+        }
+        invokeAll(subtasks);
         return null;
       }
-      visitedUrls.add(url);
-      PageParser.Result result = parserFactory.get(url).parse();
-      for (Map.Entry<String, Integer> e : result.getWordCounts().entrySet()) {
-        if (counts.containsKey(e.getKey())) {
-          counts.put(e.getKey(), e.getValue() + counts.get(e.getKey()));
-        } else {
-          counts.put(e.getKey(), e.getValue());
-        }
+      catch (Exception exception) {
+        exception.printStackTrace();
       }
-      List<internalCrawler> subtasks = new ArrayList<>();
-      for (String link : result.getLinks()) {
-        subtasks.add(new internalCrawler(link, deadline, maxDepth - 1, counts, visitedUrls, clock, parserFactory, ignoredUrls));
+      finally {
+        lock.unlock();
       }
-      invokeAll(subtasks);
-      return null;
+      return true;
     }
   }
 
